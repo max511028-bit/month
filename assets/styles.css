@@ -239,6 +239,13 @@ input {
   color: var(--red);
 }
 
+.delta-mini {
+  margin-top: 4px;
+  font-size: 10px;
+  line-height: 1.15;
+  text-align: center;
+}
+
 .badge {
   display: inline-flex;
   align-items: center;
@@ -486,6 +493,45 @@ tr:hover td {
   background: var(--panel-2);
 }
 
+.small-btn {
+  min-height: 28px;
+  padding: 4px 8px;
+  font-size: 12px;
+}
+
+.quick-filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 0 0 12px;
+}
+
+.filter-pill {
+  min-height: 32px;
+  padding: 6px 10px;
+  color: var(--soft);
+  background: var(--panel-2);
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  font-size: 12px;
+}
+
+.filter-pill.active {
+  color: #fff;
+  border-color: var(--sth-pink);
+  background: rgba(230, 34, 80, 0.18);
+}
+
+.filter-pill.static {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.filter-pill strong {
+  color: #fff;
+}
+
 .source-table-wrap {
   max-width: calc(100vw - 322px);
   max-height: calc(100vh - 178px);
@@ -589,6 +635,18 @@ tr:hover td {
   max-width: 260px;
 }
 
+.edit-inline {
+  display: inline-block;
+  margin-left: 8px;
+  padding: 0;
+  color: var(--muted);
+  background: none;
+  border: 0;
+  font-size: 11px;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
 .source-table .text-cell {
   min-width: 220px;
   white-space: normal;
@@ -675,6 +733,86 @@ tr:hover td {
   color: #fff;
   font-weight: 700;
   text-align: center;
+}
+
+.compact-table table {
+  min-width: 760px;
+}
+
+.compact-table td,
+.compact-table th {
+  vertical-align: middle;
+}
+
+.drawer-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 50;
+  display: flex;
+  justify-content: flex-end;
+  background: rgba(0, 0, 0, 0.58);
+}
+
+.edit-drawer {
+  width: min(760px, 100vw);
+  height: 100vh;
+  overflow: auto;
+  padding: 22px;
+  background: #151515;
+  border-left: 1px solid var(--line);
+  box-shadow: -24px 0 60px rgba(0, 0, 0, 0.35);
+}
+
+.drawer-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 14px;
+  margin-bottom: 18px;
+}
+
+.drawer-head h2 {
+  margin: 0;
+  font-size: 28px;
+}
+
+.drawer-fields {
+  display: grid;
+  gap: 14px;
+}
+
+.drawer-fields section {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+  padding: 14px;
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+}
+
+.drawer-fields h3 {
+  grid-column: 1 / -1;
+  margin: 0;
+  color: #fff;
+}
+
+.drawer-fields label {
+  display: grid;
+  gap: 6px;
+  color: var(--muted);
+  font-size: 12px;
+}
+
+.drawer-fields input,
+.drawer-fields textarea {
+  width: 100%;
+  min-width: 0;
+}
+
+.drawer-fields textarea {
+  min-height: 90px;
+  resize: vertical;
 }
 
 .source-table .total-row span {
@@ -781,5 +919,9 @@ tr:hover td {
 
   .source-table-wrap {
     max-width: calc(100vw - 28px);
+  }
+
+  .drawer-fields section {
+    grid-template-columns: 1fr;
   }
 }
