@@ -448,6 +448,166 @@ tr:hover td {
   font-size: 12px;
 }
 
+.sheet-toolbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 14px;
+  margin-bottom: 12px;
+  padding: 12px 14px;
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+}
+
+.sheet-actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+}
+
+.primary-btn,
+.ghost-btn {
+  min-height: 38px;
+  padding: 8px 12px;
+  border-radius: 8px;
+  border: 1px solid var(--line);
+  color: var(--text);
+}
+
+.primary-btn {
+  background: var(--sth-pink);
+  border-color: var(--sth-pink);
+}
+
+.ghost-btn {
+  background: var(--panel-2);
+}
+
+.source-table-wrap {
+  max-width: calc(100vw - 322px);
+  max-height: calc(100vh - 178px);
+  overflow: auto;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: #111;
+}
+
+.source-table {
+  width: max-content;
+  min-width: 3400px;
+  border-collapse: separate;
+  border-spacing: 0;
+}
+
+.source-table th,
+.source-table td {
+  min-width: 104px;
+  max-width: 240px;
+  padding: 7px 8px;
+  border-right: 1px solid #2d2d2d;
+  border-bottom: 1px solid #2d2d2d;
+  font-size: 12px;
+  line-height: 1.25;
+  background: #171717;
+}
+
+.source-table td {
+  background: #151515;
+  color: #ededed;
+}
+
+.source-table th {
+  top: 0;
+  z-index: 5;
+  color: #f5f5f5;
+  white-space: normal;
+}
+
+.source-table .group-head th {
+  top: 0;
+  height: 34px;
+  background: #101010;
+  color: #fff;
+  font-size: 14px;
+  text-align: center;
+  border-bottom: 2px solid var(--sth-pink);
+}
+
+.source-table thead tr:nth-child(2) th {
+  top: 34px;
+  height: 74px;
+  color: #cfcfcf;
+  vertical-align: bottom;
+}
+
+.source-table .sticky-col {
+  position: sticky;
+  left: 0;
+  z-index: 4;
+  min-width: 150px;
+  max-width: 180px;
+  background: #1e1e1e;
+}
+
+.source-table th.sticky-col {
+  z-index: 7;
+}
+
+.source-table .sticky-col + .sticky-col {
+  left: 150px;
+  min-width: 210px;
+  max-width: 260px;
+}
+
+.source-table .text-cell {
+  min-width: 220px;
+  white-space: normal;
+}
+
+.source-table .formula-cell {
+  color: #ffd166;
+  background: #191713;
+}
+
+.source-table .total-row td {
+  background: #24141a;
+  color: #fff;
+  font-weight: 700;
+}
+
+.source-table .total-row span {
+  color: var(--muted);
+  font-weight: 500;
+}
+
+.source-table input,
+.source-table textarea {
+  width: 100%;
+  min-width: 0;
+  min-height: 30px;
+  padding: 5px 6px;
+  border-radius: 4px;
+  border: 1px solid #494949;
+  background: #0f0f0f;
+  color: #fff;
+}
+
+.source-table textarea {
+  height: 76px;
+  resize: vertical;
+}
+
+.source-table tr:hover td {
+  background: #202020;
+}
+
+.source-table tr:hover .formula-cell {
+  background: #2a2115;
+}
+
 @media (max-width: 1120px) {
   .app-shell {
     grid-template-columns: 1fr;
@@ -501,5 +661,14 @@ tr:hover td {
   .bar,
   .funnel-step {
     grid-template-columns: 1fr;
+  }
+
+  .sheet-toolbar {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .source-table-wrap {
+    max-width: calc(100vw - 28px);
   }
 }
