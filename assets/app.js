@@ -107,6 +107,12 @@ const sourceColumns = [
   { key: "agreements", group: "Маркетинг", type: "textarea" },
 ];
 
+const groupClassMap = {
+  "Реализация": "realization-zone",
+  "Группа подбора": "recruiting-zone",
+  "Маркетинг": "marketing-zone",
+};
+
 const moneyMetrics = new Set(["revenueVat", "penalties", "realizationPayroll", "recruitingPayroll", "marketingPayroll", "marketingBudget", "responseCost", "targetLeadCost"]);
 const percentMetrics = new Set(["penaltyShare", "requestCloseRate", "invitedToResponseRate", "registeredToInvitedRate", "warehouseToRegisteredRate", "firstShiftToWarehouseRate", "tenShiftsToFirstShiftRate", "responseToWarehouseRate", "targetLeadRate"]);
 const textMetrics = new Set(["realizationDrivers", "realizationBlockers", "recruitingDrivers", "recruitingBlockers", "marketingDrivers", "marketingBlockers", "agreements", "marketingProjectName"]);
@@ -375,9 +381,13 @@ function sourceHeader() {
   });
   return `
     <thead>
-      <tr class="group-head">${groups.map((g, index) => `<th colspan="${g.count}" class="${index === 0 ? "corner-head" : ""}">${escapeHtml(g.name)}</th>`).join("")}</tr>
-      <tr>${sourceColumns.map((col) => `<th class="${col.fixed ? "sticky-col head-fixed" : ""}">${escapeHtml(col.label || metricLabels[col.key] || col.key)}</th>`).join("")}</tr>
+      <tr class="group-head">${groups.map((g, index) => `<th colspan="${g.count}" class="${index === 0 ? "corner-head" : groupClass(g.name)}">${escapeHtml(g.name)}</th>`).join("")}</tr>
+      <tr>${sourceColumns.map((col) => `<th class="${col.fixed ? "sticky-col head-fixed" : ""} ${groupClass(col.group)}">${escapeHtml(col.label || metricLabels[col.key] || col.key)}</th>`).join("")}</tr>
     </thead>`;
+}
+
+function groupClass(group) {
+  return groupClassMap[group] || "";
 }
 
 function buildGroupedRows(projects) {
@@ -408,20 +418,45 @@ function sourceCell(project, col) {
   const value = col.key === "division" ? project.division : col.key === "name" ? project.name : textMetrics.has(col.key) ? project.metrics[col.key] : project.metrics[col.key];
   const fixed = col.fixed ? "sticky-col" : "";
   const formula = col.type === "formula" ? "formula-cell" : "";
+  const zone = groupClass(col.group);
+  const norm = col.key !== "division" && col.key !== "name" ? normFor(col.key, project) : null;
+  const status = normStatus(value, norm);
   if (!state.editing || col.type === "formula") {
     const label = col.type === "formula" || (!textMetrics.has(col.key) && col.key !== "name" && col.key !== "division") ? format(value, col.key) : escapeHtml(value || "");
     const action = col.key === "name" ? `<button class="linkish" data-open-project="${project.id}">${escapeHtml(value || "")}</button>` : label;
-    return `<td class="${fixed} ${formula} ${textMetrics.has(col.key) ? "text-cell" : ""}">${action}</td>`;
+    return `<td class="${fixed} ${formula} ${zone} ${status} ${cellKind(col)}">${cellContent(action, norm, col.key, status)}</td>`;
   }
   const field = `data-cell data-month="${project.monthId}" data-project="${project.id}" data-field="${col.key}"`;
-  if (col.type === "textarea") return `<td class="${fixed} text-cell"><textarea ${field}>${escapeHtml(value || "")}</textarea></td>`;
-  return `<td class="${fixed}"><input ${field} type="${col.type === "number" ? "number" : "text"}" value="${escapeHtml(format(value, col.key, true))}"></td>`;
+  if (col.type === "textarea") return `<td class="${fixed} ${zone} text-cell"><textarea ${field}>${escapeHtml(value || "")}</textarea></td>`;
+  return `<td class="${fixed} ${zone} ${status} ${cellKind(col)}"><input ${field} type="${col.type === "number" ? "number" : "text"}" value="${escapeHtml(format(value, col.key, true))}">${normLine(norm, col.key, status)}</td>`;
+}
+
+function cellKind(col) {
+  if (textMetrics.has(col.key) || col.key === "name" || col.key === "division") return "text-cell";
+  return "number-cell";
+}
+
+function cellContent(content, norm, key, status) {
+  return `<div class="cell-main">${content}</div>${normLine(norm, key, status)}`;
+}
+
+function normLine(norm, key, status) {
+  if (!norm || norm.target === null || textMetrics.has(key)) return "";
+  const sign = norm.direction === "lte" ? "≤" : "≥";
+  const label = status === "norm-ok" ? "норма" : status === "norm-bad" ? "ниже нормы" : "норма";
+  return `<div class="norm-line ${status}">${label}: ${sign} ${format(norm.target, key)}</div>`;
+}
+
+function normStatus(value, norm) {
+  if (!norm || norm.target === null || value === null || value === undefined || Number.isNaN(value)) return "";
+  if (norm.direction === "lte") return value <= norm.target ? "norm-ok" : "norm-bad";
+  return value >= norm.target ? "norm-ok" : "norm-bad";
 }
 
 function totalRow(row) {
   const agg = aggregate(row.projects);
   const label = row.type === "grand" ? `Итоги ${report().label}` : "Итог по дивизиону";
-  return `<tr class="total-row"><td class="sticky-col" colspan="2">${escapeHtml(label)}${row.division ? `<br><span>${escapeHtml(row.division)}</span>` : ""}</td>${sourceColumns.slice(2).map((col) => `<td class="${col.type === "textarea" || textMetrics.has(col.key) ? "text-cell" : ""}">${textMetrics.has(col.key) ? "" : format(agg[col.key], col.key)}</td>`).join("")}</tr>`;
+  return `<tr class="total-row"><td class="sticky-col" colspan="2">${escapeHtml(label)}${row.division ? `<br><span>${escapeHtml(row.division)}</span>` : ""}</td>${sourceColumns.slice(2).map((col) => `<td class="${groupClass(col.group)} ${col.type === "textarea" || textMetrics.has(col.key) ? "text-cell" : "number-cell"}">${textMetrics.has(col.key) ? "" : format(agg[col.key], col.key)}</td>`).join("")}</tr>`;
 }
 
 function kpi(label, value, metric) {

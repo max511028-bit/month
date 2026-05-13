@@ -536,11 +536,38 @@ tr:hover td {
   border-bottom: 2px solid var(--sth-pink);
 }
 
+.source-table .group-head th.realization-zone {
+  background: #21181a;
+  border-bottom-color: var(--sth-pink);
+}
+
+.source-table .group-head th.recruiting-zone {
+  background: #141f1b;
+  border-bottom-color: var(--green);
+}
+
+.source-table .group-head th.marketing-zone {
+  background: #171b25;
+  border-bottom-color: var(--cyan);
+}
+
 .source-table thead tr:nth-child(2) th {
   top: 34px;
   height: 74px;
   color: #cfcfcf;
   vertical-align: bottom;
+}
+
+.source-table th.realization-zone {
+  background: #1d1718;
+}
+
+.source-table th.recruiting-zone {
+  background: #131b18;
+}
+
+.source-table th.marketing-zone {
+  background: #141821;
 }
 
 .source-table .sticky-col {
@@ -567,15 +594,87 @@ tr:hover td {
   white-space: normal;
 }
 
+.source-table .number-cell {
+  text-align: center;
+  vertical-align: middle;
+}
+
+.source-table td.realization-zone {
+  background: #181515;
+}
+
+.source-table td.recruiting-zone {
+  background: #131817;
+}
+
+.source-table td.marketing-zone {
+  background: #13161b;
+}
+
+.source-table td.realization-zone.number-cell {
+  box-shadow: inset 0 1px 0 rgba(230, 34, 80, 0.05);
+}
+
+.source-table td.recruiting-zone.number-cell {
+  box-shadow: inset 0 1px 0 rgba(61, 220, 151, 0.05);
+}
+
+.source-table td.marketing-zone.number-cell {
+  box-shadow: inset 0 1px 0 rgba(101, 214, 255, 0.05);
+}
+
 .source-table .formula-cell {
   color: #ffd166;
   background: #191713;
+}
+
+.source-table .cell-main {
+  display: grid;
+  min-height: 20px;
+  place-items: center;
+  font-weight: 600;
+}
+
+.source-table .text-cell .cell-main {
+  display: block;
+  min-height: 0;
+  font-weight: 500;
+}
+
+.norm-line {
+  margin-top: 4px;
+  padding-top: 4px;
+  border-top: 1px solid rgba(255, 255, 255, 0.06);
+  color: var(--muted);
+  font-size: 10px;
+  font-weight: 500;
+  line-height: 1.15;
+  text-align: center;
+}
+
+.norm-line.norm-ok {
+  color: var(--green);
+}
+
+.norm-line.norm-bad {
+  color: var(--red);
+}
+
+.source-table td.norm-ok.number-cell {
+  outline: 1px solid rgba(61, 220, 151, 0.2);
+  outline-offset: -1px;
+}
+
+.source-table td.norm-bad.number-cell {
+  outline: 1px solid rgba(230, 34, 80, 0.32);
+  outline-offset: -1px;
 }
 
 .source-table .total-row td {
   background: #24141a;
   color: #fff;
   font-weight: 700;
+  text-align: center;
 }
 
 .source-table .total-row span {
@@ -606,6 +705,18 @@ tr:hover td {
 
 .source-table tr:hover .formula-cell {
   background: #2a2115;
+}
+
+.source-table tr:hover td.recruiting-zone {
+  background: #18221e;
+}
+
+.source-table tr:hover td.marketing-zone {
+  background: #181e29;
+}
+
+.source-table tr:hover td.realization-zone {
+  background: #23191b;
 }
 
 @media (max-width: 1120px) {
